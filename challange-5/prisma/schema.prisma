@@ -1,0 +1,68 @@
+// BES2402KM6017
+// MUHAMMAD AMMAR IZZUDIN
+// BEJS
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// BES2402KM6017
+// MUHAMMAD AMMAR IZZUDIN
+// BEJS
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Pengguna {
+  id        Int        @id @default(autoincrement())
+  nama      String
+  email     String     @unique
+  kataSandi String
+  Rekening  Rekening[]
+  Profil    Profil?
+
+  @@map("pengguna")
+}
+
+model Rekening {
+  id         Int         @id @default(autoincrement())
+  namaBank   String
+  noRek      String      @unique
+  saldo      Float
+  idPengguna Int
+  pengguna   Pengguna    @relation(fields: [idPengguna], references: [id])
+  dikirim    Transaksi[] @relation("Asal")
+  diterima   Transaksi[] @relation("Tujuan")
+
+  @@map("rekening")
+}
+
+model Transaksi {
+  id          Int       @id @default(autoincrement())
+  jumlah      Float
+  dikirim     Rekening? @relation("Asal", fields: [idRekAsal], references: [id])
+  diterima    Rekening? @relation("Tujuan", fields: [idRekTujuan], references: [id])
+  idRekAsal   Int?
+  idRekTujuan Int?
+
+  @@map("transaksi")
+}
+
+model Profil {
+  id            Int      @id @default(autoincrement())
+  tipeIdentitas String
+  noIdentitas   String   @unique
+  alamat        String
+  pengguna      Pengguna @relation(fields: [idPengguna], references: [id])
+  idPengguna    Int      @unique
+
+  @@map("profil")
+}

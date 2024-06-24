@@ -1,0 +1,75 @@
+# BES2402KM6017
+# MUHAMMAD AMMAR IZZUDIN
+# BEJS
+
+# Autentikasi
+### Register pengguna
+POST http://localhost:3000/api/v1/users/auth/register
+Content-Type: application/json
+
+{
+    "nama": "ammar",
+    "email": "ammar@mail.com",
+    "kataSandi": "ammar123",
+    "tipeIdentitas": "ktp",
+    "noIdentitas": "0037123452",
+    "alamat": "tegal"
+}
+
+### Login pengguna
+POST http://localhost:3000/api/v1/users/auth/login
+Content-Type: application/json
+
+{
+    "email": "ammar@mail.com",
+    "kataSandi": "ammar121"
+}
+
+### Autentikasi berhasil
+GET http://localhost:3000/api/v1/users/auth/authenticate
+Authorization: Bearer eyJhbGciOiJUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtYSI6ImFtbWFyIiwiZW1haWwiOiJhbW1hckBtYWlsLmNvbSIsImlhdCI6MTcxMzY2MTY1NH0.t5BWGFKOCXiJvXLVss_reaWTrDNn0Qrs79T9AF_UlR4
+
+
+# Pengguna/user
+### Tampil daftar pengguna
+GET http://localhost:3000/api/v1/users
+
+### Tampil detail pengguna beserta profil
+GET http://localhost:3000/api/v1/users/5
+
+
+# Rekening/account
+### Tambah rekening/account
+POST http://localhost:3000/api/v1/accounts
+Content-Type: application/json
+
+{
+    "namaBank": "bri",
+    "noRek": "1234567893",
+    "saldo": 12000000,
+    "idPengguna": "1"
+}
+
+### Tampil daftar rekening/account
+GET http://localhost:3000/api/v1/accounts
+
+### Tampil detail rekening/account berdasarkan ID
+GET http://localhost:3000/api/v1/accounts/3
+
+
+# Transaksi
+### Transaksi kirim uang
+POST http://localhost:3000/api/v1/transactions
+Content-Type: application/json
+
+{
+    "idRekAsal": 1,
+    "idRekTujuan": 2,
+    "jumlah": 5000
+}
+
+### Tampil daftar transaksi
+GET http://localhost:3000/api/v1/transactions
+
+### Tampil detail transaksi berdasarkan ID
+GET http://localhost:3000/api/v1/transactions/4

@@ -1,0 +1,7 @@
+# BES2402KM6017
+# MUHAMMAD AMMAR IZZUDIN
+# BEJS
+
+node_modules
+# Keep environment variables out of version control
+.env

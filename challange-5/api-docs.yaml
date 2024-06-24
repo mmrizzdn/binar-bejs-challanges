@@ -1,0 +1,689 @@
+# BES2402KM6017
+# MUHAMMAD AMMAR IZZUDIN
+# BEJS
+
+openapi: 3.0.1
+info:
+    title: Basic Banking System
+    description: challange 5 bejs binar km6
+    version: 1.0.0
+    contact:
+        email: 21102122@ittelkom-pwt.ac.id
+servers:
+    - url: http://localhost:3000/api/v1
+paths:
+    /users/auth/register:
+        post:
+            summary: daftar pengguna baru
+            description: mendaftarkan pengguna baru ke dalam sistem.
+            requestBody:
+                $ref: "#/components/requestBodies/Daftar"
+            responses:
+                201:
+                    description: pendaftaran berhasil
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: tambah pengguna berhasil!
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Pengguna"
+                                            - type: object
+                                              properties:
+                                                  Profil:
+                                                      type: object
+                                                      allOf:
+                                                          - $ref: "#/components/schemas/Profil"
+                                                          - type: object
+                400:
+                    description: pendaftaran gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: email udah dipake!
+                                    data:
+                                        type: object
+                                        example: null
+    /users/auth/login:
+        post:
+            summary: login baru
+            description: login pengguna ke dalam sistem.
+            requestBody:
+                $ref: "#/components/requestBodies/Masuk"
+            responses:
+                201:
+                    description: login berhasil
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: login berhasil
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Masuk"
+                                            - type: object
+                                              properties:
+                                                  token:
+                                                      type: string
+                                                      example: tokenammar
+
+                400:
+                    description: login gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: email atau kata sandi salah!
+                                    data:
+                                        type: object
+                                        example: null
+    /users/auth/authenticate:
+        get:
+            summary: cek autentikasi
+            responses:
+                200:
+                    description: terotorisasi
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: autentikasi berhasil!
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Masuk"
+                                            - type: object
+                401:
+                    description: tidak terotorisasi
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: token nggak tersedia!
+                                    data:
+                                        type: object
+                                        example: null
+            security:
+                - bearerAuth: []
+    /users:
+        get:
+            summary: tampil daftar user
+            responses:
+                200:
+                    description: sukses
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: OKE
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Pengguna"
+                                            - type: object
+                404:
+                    description: gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: pengguna nggak ada!
+                                    data:
+                                        type: object
+                                        example: null
+    /users/{user_id}:
+        parameters:
+            - schema:
+                  type: integer
+              name: user_id
+              in: path
+              required: true
+        get:
+            summary: tampil detail pengguna
+            responses:
+                200:
+                    description: success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: OKE
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Pengguna"
+                                            - type: object
+                                              properties:
+                                                  Profil:
+                                                      type: object
+                                                      allOf:
+                                                          - $ref: "#/components/schemas/Profil"
+                                                          - type: object
+                404:
+                    description: gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: pengguna dengan id 10 nggak ada!!
+                                    data:
+                                        type: object
+                                        example: null
+    /accounts:
+        post:
+            summary: bikin rekening/akun baru
+            description: membuat rekening/akun baru ke dalam sistem.
+            requestBody:
+                $ref: "#/components/requestBodies/Rekening"
+            responses:
+                201:
+                    description: bikin rekening/akun berhasil
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: tambah rekening/akun berhasil!
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Rekening"
+                                            - type: object
+                400:
+                    description: bikin rekening/akun gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: nomer rekening udah dipake!
+                                    data:
+                                        type: object
+                                        example: null
+        get:
+            summary: tampil daftar rekening/akun
+            responses:
+                200:
+                    description: sukses
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: OKE
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Rekening"
+                                            - type: object
+                                              properties:
+                                                  pengguna:
+                                                      type: object
+                                                      properties:
+                                                          nama:
+                                                              type: string
+                                                              example: ammar
+                404:
+                    description: gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: rekening nggak ada!
+                                    data:
+                                        type: object
+                                        example: null
+    /accounts/{account_id}:
+        parameters:
+            - schema:
+                  type: integer
+              name: account_id
+              in: path
+              required: true
+        get:
+            summary: tampil detail rekening/akun
+            responses:
+                200:
+                    description: success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: OKE
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Rekening"
+                                            - type: object
+                                              properties:
+                                                  pengguna:
+                                                      type: object
+                                                      properties:
+                                                          nama:
+                                                              type: string
+                                                              example: ammar
+                404:
+                    description: gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: rekening dengan id 10 nggak ada!!
+                                    data:
+                                        type: object
+                                        example: null
+    /transactions:
+        post:
+            summary: kirim uang
+            description: membuat transaksi baru ke dalam sistem.
+            requestBody:
+                $ref: "#/components/requestBodies/Transaksi"
+            responses:
+                201:
+                    description: transfer uang berhasil
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: transaksi berhasil!
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Transaksi"
+                                            - type: object
+                400:
+                    description: transfer uang gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: saldo rekening asal kurang!
+                                    data:
+                                        type: object
+                                        example: null
+        get:
+            summary: tampil daftar transaksi
+            responses:
+                200:
+                    description: sukses
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: OKE
+                                    data:
+                                        allOf:
+                                            - $ref: "#/components/schemas/Transaksi"
+                                            - type: object
+                404:
+                    description: gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: transaksi nggak ada!
+                                    data:
+                                        type: object
+                                        example: null
+    /transactions/{transaction_id}:
+        parameters:
+            - schema:
+                  type: integer
+              name: transaction_id
+              in: path
+              required: true
+        get:
+            summary: tampil detail transaksi
+            responses:
+                200:
+                    description: success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: OKE
+                                    data:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: integer
+                                                example: 1
+                                            jumlah:
+                                                type: number
+                                                example: 20000
+                                            dikirim:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 1
+                                                    namaBank:
+                                                        type: string
+                                                        example: bni
+                                                    noRek:
+                                                        type: string
+                                                        example: 1234567890
+                                                    idPengguna:
+                                                        type: integer
+                                                        example: 1
+                                                    pengguna:
+                                                        type: object
+                                                        properties:
+                                                            nama:
+                                                                type: string
+                                                                example: ammar
+                                            diterima:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 2
+                                                    namaBank:
+                                                        type: string
+                                                        example: bri
+                                                    noRek:
+                                                        type: string
+                                                        example: 1234567891
+                                                    idPengguna:
+                                                        type: integer
+                                                        example: 2
+                                                    pengguna:
+                                                        type: object
+                                                        properties:
+                                                            nama:
+                                                                type: string
+                                                                example: lulu
+                404:
+                    description: gagal
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: id nggak ada!
+                                    data:
+                                        type: object
+                                        example: null
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        Pengguna:
+            title: Pengguna
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                nama:
+                    type: string
+                    example: ammar
+                email:
+                    type: string
+                    example: ammar@mail.com
+                kataSandi:
+                    type: string
+                    example: ammar123
+        Profil:
+            title: Profil
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                tipeIdentitas:
+                    type: string
+                    example: ktp
+                noIdentitas:
+                    type: string
+                    example: 0037123452
+                alamat:
+                    type: string
+                    example: tegal
+                idPengguna:
+                    type: integer
+                    example: 1
+        Masuk:
+            title: Login
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                nama:
+                    type: string
+                    example: ammar
+                email:
+                    type: string
+                    example: ammar@mail.com
+        Rekening:
+            title: Rekening/akun
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                namaBank:
+                    type: string
+                    example: bni
+                noRek:
+                    type: string
+                    example: 1234567890
+                saldo:
+                    type: number
+                    example: 12000000
+                idPengguna:
+                    type: integer
+                    example: 1
+        Transaksi:
+            title: Transaksi
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                jumlah:
+                    type: number
+                    example: 20000
+                idRekAsal:
+                    type: integer
+                    example: 1
+                idRekTujuan:
+                    type: integer
+                    example: 2
+    requestBodies:
+        Daftar:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            nama:
+                                type: string
+                                example: ammar
+                            email:
+                                type: string
+                                example: ammar@mail.com
+                            kataSandi:
+                                type: string
+                                example: ammar123
+                            tipeIdentitas:
+                                type: string
+                                example: ktp
+                            noIdentitas:
+                                type: string
+                                example: 0037123452
+                            alamat:
+                                type: string
+                                example: tegal
+        Masuk:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            email:
+                                type: string
+                                example: ammar@mail.com
+                            kataSandi:
+                                type: string
+                                example: ammar123
+        Rekening:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            namaBank:
+                                type: string
+                                example: bni
+                            noRek:
+                                type: string
+                                example: 1234567890
+                            saldo:
+                                type: number
+                                example: 12000000
+                            idPengguna:
+                                type: integer
+                                example: 1
+        Transaksi:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            idRekAsal:
+                                type: integer
+                                example: 1
+                            idRekTujuan:
+                                type: integer
+                                example: 2
+                            jumlah:
+                                type: number
+                                example: 20000
